@@ -26,12 +26,15 @@ class AcquirerPayfast(models.Model):
         for sale_order in sale_orders:
             for line in sale_order.order_line:
                 item_name = item_name + line.product_id.name + '_'
+        currency_id =  self.env['res.currency'].sudo().search([('name','=','ZAR')], limit=1)
+        if currency_id.id != sale_orders[0].pricelist_id.currency_id.id:
+            base_price = currency_id.compute(values.get('amount'), sale_order[0].pricelist_id.currency_id)
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         payfast_tx_values = dict(values)
         payfast_tx_values.update({
             'merchant_id': self.merchant_id,
             'merchant_key': self.merchant_key,
-            'amount': values.get('amount'),
+            'amount': base_price,
             'item_name': item_name,
             'return_url': '%s' % parse.urljoin(base_url, PayfastController.return_url),
             'cancel_url': '%s' % parse.urljoin(base_url, PayfastController.cancel_url),
