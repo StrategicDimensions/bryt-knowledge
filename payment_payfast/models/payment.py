@@ -29,6 +29,7 @@ class AcquirerPayfast(models.Model):
         currency_id =  self.env['res.currency'].sudo().search([('name','=','ZAR')], limit=1)
         if currency_id.id != sale_orders[0].pricelist_id.currency_id.id:
             base_price = currency_id._compute(currency_id, sale_order[0].pricelist_id.currency_id, values.get('amount'),True)
+            base_price = float('%.2f' % (base_price))
         else:
             base_price = values.get('amount')
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
