@@ -58,7 +58,7 @@
                                         <t t-if="currency_id1">
                                             <tr>
                                               <td colspan="2"><t t-esc="order.get_portal_last_transaction().acquirer_id.name" /></td>
-                                              <td class="text-right"><strong>Total</strong>(<t t-esc="currency_id1.name"/>):</td>
+                                              <td class="text-right"><strong>Total</strong><span>(</span><t t-esc="currency_id1.name"/>):</td>
                                               <td class="text-xl-right">
                                                   <t t-set="value" t-value="currency_id1.sudo()._compute(order.pricelist_id.currency_id, currency_id1, order.amount_total,True)"/>
                                                   <strong t-esc="value" class="monetary_field"
@@ -71,7 +71,7 @@
                                                 <t t-esc="order.get_portal_last_transaction().acquirer_id.name" />
                                             </td>
                                             <td class="text-right" width="100">
-                                                <strong>Total</strong>(<t t-esc="order.pricelist_id.currency_id.name"/>):
+                                                <strong>Total</strong><span>(</span><t t-esc="order.pricelist_id.currency_id.name"/>):
                                             </td>
                                             <td class="text-right" width="100">
                                                 <strong t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
@@ -81,7 +81,7 @@
                                         <t t-if="currency_id2">
                                             <tr>
                                               <td colspan="2"><t t-esc="order.get_portal_last_transaction().acquirer_id.name" /></td>
-                                              <td class="text-right"><strong>Total</strong>(<t t-esc="currency_id2.name"/>):</td>
+                                              <td class="text-right"><strong>Total</strong><span>(</span><t t-esc="currency_id2.name"/>):</td>
                                               <td class="text-xl-right">
                                                   <t t-set="value" t-value="currency_id2.sudo()._compute(order.pricelist_id.currency_id, currency_id2, order.amount_total,True)"/>
                                                   <strong t-esc="value" class="monetary_field"
