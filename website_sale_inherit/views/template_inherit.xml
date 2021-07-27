@@ -66,7 +66,7 @@
                                               </td>
                                           </tr>
                                         </t>
-                                        <tr>
+                                        <tr t-if="order.pricelist_id.currency_id.name == 'USD'">
                                             <td colspan="2">
                                                 <t t-esc="order.get_portal_last_transaction().acquirer_id.name" />
                                             </td>
@@ -76,6 +76,20 @@
                                             <td class="text-right" width="100">
                                                 <strong t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
                                             </td>
+                                        </tr>
+                                        <tr t-if="order.pricelist_id.currency_id.name != 'USD'">
+                                        <t t-set="currency_id3" t-value="request.env['res.currency'].sudo().search([('name','=', 'USD'),('active','=',True)])"/>
+                                        <t t-if="currency_id3">
+                                            <tr>
+                                              <td colspan="2"><t t-esc="order.get_portal_last_transaction().acquirer_id.name" /></td>
+                                              <td class="text-right"><strong>Total</strong><span>(</span><t t-esc="currency_id3.name"/>):</td>
+                                              <td class="text-xl-right">
+                                                  <t t-set="value" t-value="currency_id3.sudo()._compute(order.pricelist_id.currency_id, currency_id3, order.amount_total,True)"/>
+                                                  <strong t-esc="value" class="monetary_field"
+                                                      t-options='{"widget": "monetary", "display_currency": currency_id3}'/>
+                                              </td>
+                                          </tr>
+                                        </t>
                                         </tr>
                                         <t t-set="currency_id2" t-value="request.env['res.currency'].sudo().search([('name','=', 'ZAR'),('active','=',True)])"/>
                                         <t t-if="currency_id2">
@@ -129,13 +143,24 @@
                   </td>
               </tr>
             </t>
-            <tr id="order_total">
+            <tr t-if="website_sale_order.pricelist_id.currency_id.name == 'USD'" id="order_total">
                   <td class="text-right"><strong>Total</strong>(<t t-esc="website_sale_order.pricelist_id.currency_id.name"/>):</td>
                   <td class="text-xl-right">
                       <strong t-field="website_sale_order.amount_total" class="monetary_field"
                           t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                   </td>
+          </tr>
+            <t t-set="currency_id3" t-value="request.env['res.currency'].sudo().search([('name','=', 'USD'),('active','=',True)])"/>
+            <t t-if="currency_id3">
+                <tr id="order_total" t-if="website_sale_order.pricelist_id.currency_id.name != 'USD'" >
+                  <td class="text-right"><strong>Total</strong>(<t t-esc="currency_id3.name"/>):</td>
+                  <td class="text-xl-right">
+                      <t t-set="value" t-value="currency_id3.sudo()._compute(website_sale_order.pricelist_id.currency_id, currency_id3, website_sale_order.amount_total,True)"/>
+                      <strong t-esc="value" class="monetary_field"
+                          t-options='{"widget": "monetary", "display_currency": currency_id3}'/>
+                  </td>
               </tr>
+            </t>
             <t t-set="currency_id2" t-value="request.env['res.currency'].sudo().search([('name','=', 'ZAR'),('active','=',True)])"/>
             <t t-if="currency_id2">
                 <tr id="order_total">
